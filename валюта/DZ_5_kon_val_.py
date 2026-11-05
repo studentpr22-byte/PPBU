@@ -81,3 +81,10 @@ root.title('Курс обмена валют')
 root.geometry('360x270')
 
 #
+# Первая базовая валюта
+Label(root, text='Базовая валюта 1').pack()
+base_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
+base_combobox.pack(pady=3, padx=10)
+base_combobox.bind('<<ComboboxSelected>>', update_base_label)
+base_label = ttk.Label()
+base_label.pack()
