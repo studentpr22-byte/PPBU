@@ -12,7 +12,7 @@ def update_currency_label(event):
 
 
 def update_base_label(event):
-    # Определяем, какой именно комбобокс вызвал событие
+    # РћРїСЂРµРґРµР»СЏРµРј, РєР°РєРѕР№ РёРјРµРЅРЅРѕ РєРѕРјР±РѕР±РѕРєСЃ РІС‹Р·РІР°Р» СЃРѕР±С‹С‚РёРµ
     widget = event.widget
     if widget == base_combobox:
         code = base_combobox.get()
@@ -28,21 +28,21 @@ def exchange():
     s_base_code = s_base_combobox.get().strip()
 
     if not (target_code and base_code and s_base_code):
-        mb.showwarning('Внимание', 'Выберите все три валюты')
+        mb.showwarning('Р’РЅРёРјР°РЅРёРµ', 'Р’С‹Р±РµСЂРёС‚Рµ РІСЃРµ С‚СЂРё РІР°Р»СЋС‚С‹')
         return
 
     try:
-        # Запрос для первой базовой валюты
+        # Р—Р°РїСЂРѕСЃ РґР»СЏ РїРµСЂРІРѕР№ Р±Р°Р·РѕРІРѕР№ РІР°Р»СЋС‚С‹
         response1 = requests.get(f'https://open.er-api.com/v6/latest/{base_code}')
         response1.raise_for_status()
         data1 = response1.json()
 
-        # Запрос для второй базовой валюты
+        # Р—Р°РїСЂРѕСЃ РґР»СЏ РІС‚РѕСЂРѕР№ Р±Р°Р·РѕРІРѕР№ РІР°Р»СЋС‚С‹
         response2 = requests.get(f'https://open.er-api.com/v6/latest/{s_base_code}')
         response2.raise_for_status()
         data2 = response2.json()
 
-        # Проверяем наличие целевой валюты в обоих ответах
+        # РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ С†РµР»РµРІРѕР№ РІР°Р»СЋС‚С‹ РІ РѕР±РѕРёС… РѕС‚РІРµС‚Р°С…
         if target_code in data1['rates'] and target_code in data2['rates']:
             rate1 = data1['rates'][target_code]
             rate2 = data2['rates'][target_code]
@@ -51,40 +51,65 @@ def exchange():
             s_base_name = currencies[s_base_code]
             target_name = currencies[target_code]
 
-            mb.showinfo('Курсы обмена',
-                        f'1 {base_name} = {rate1:.2f} {target_name}\n'
+            mb.showinfo('РљСѓСЂСЃС‹ РѕР±РјРµРЅР°',
+                        f'1 {base_name} = {rate1:.2f} {target_name}\n' 
                         f'1 {s_base_name} = {rate2:.2f} {target_name}')
         else:
-            mb.showerror('Ошибка', f'Валюта {target_code} не найдена в ответе API')
+            mb.showerror('РћС€РёР±РєР°', f'Р’Р°Р»СЋС‚Р° {target_code} РЅРµ РЅР°Р№РґРµРЅР° РІ РѕС‚РІРµС‚Рµ API')
 
     except requests.exceptions.RequestException as er:
-        mb.showerror('Ошибка сети', str(er))
+        mb.showerror('РћС€РёР±РєР° СЃРµС‚Рё', str(er))
     except Exception as er:
-        mb.showerror('Ошибка', str(er))
+        mb.showerror('РћС€РёР±РєР°', str(er))
 
 
 currencies = {
-    'EUR': 'Евро',
-    'USD': 'Доллар США',
-    'JPY': 'Японская йена',
-    'GBP': 'Фунт стерлингов',
-    'AUD': 'Австралийский доллар',
-    'CAD': 'Канадский доллар',
-    'CHF': 'Швейцарский франк',
-    'CNY': 'Китайский юань',
-    'RUB': 'Российский рубль',
-    'KZT': 'Казахстанский тенге',
-    'UZS': 'Узбекский сум'
+    'EUR': 'Р•РІСЂРѕ',
+    'USD': 'Р”РѕР»Р»Р°СЂ РЎРЁРђ',
+    'JPY': 'РЇРїРѕРЅСЃРєР°СЏ Р№РµРЅР°',
+    'GBP': 'Р¤СѓРЅС‚ СЃС‚РµСЂР»РёРЅРіРѕРІ',
+    'AUD': 'РђРІСЃС‚СЂР°Р»РёР№СЃРєРёР№ РґРѕР»Р»Р°СЂ',
+    'CAD': 'РљР°РЅР°РґСЃРєРёР№ РґРѕР»Р»Р°СЂ',
+    'CHF': 'РЁРІРµР№С†Р°СЂСЃРєРёР№ С„СЂР°РЅРє',
+    'CNY': 'РљРёС‚Р°Р№СЃРєРёР№ СЋР°РЅСЊ',
+    'RUB': 'Р РѕСЃСЃРёР№СЃРєРёР№ СЂСѓР±Р»СЊ',
+    'KZT': 'РљР°Р·Р°С…СЃС‚Р°РЅСЃРєРёР№ С‚РµРЅРіРµ',
+    'UZS': 'РЈР·Р±РµРєСЃРєРёР№ СЃСѓРј'
 }
 
 root = Tk()
-root.title('Курс обмена валют')
+root.title('РљСѓСЂСЃ РѕР±РјРµРЅР° РІР°Р»СЋС‚')
 root.geometry('360x270')
 
-# Первая базовая валюта
-Label(root, text='Базовая валюта 1').pack()
+# РџРµСЂРІР°СЏ Р±Р°Р·РѕРІР°СЏ РІР°Р»СЋС‚Р°
+Label(root, text='Р‘Р°Р·РѕРІР°СЏ РІР°Р»СЋС‚Р° 1').pack()
 base_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
 base_combobox.pack(pady=3, padx=10)
 base_combobox.bind('<<ComboboxSelected>>', update_base_label)
 base_label = ttk.Label()
 base_label.pack()
+
+# Р’С‚РѕСЂР°СЏ Р±Р°Р·РѕРІР°СЏ РІР°Р»СЋС‚Р°
+Label(root, text='Р‘Р°Р·РѕРІР°СЏ РІР°Р»СЋС‚Р° 2').pack()
+s_base_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
+s_base_combobox.pack(pady=3, padx=10)
+s_base_combobox.bind('<<ComboboxSelected>>', update_base_label)
+s_base_label = ttk.Label()
+s_base_label.pack()
+
+# Р¦РµР»РµРІР°СЏ РІР°Р»СЋС‚Р°
+Label(root, text='Р¦РµР»РµРІР°СЏ РІР°Р»СЋС‚Р°').pack(padx=10)
+target_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
+target_combobox.pack(pady=3, padx=10)
+target_combobox.bind('<<ComboboxSelected>>', update_currency_label)
+target_label = ttk.Label()
+target_label.pack()
+
+Button(text='РџРѕР»СѓС‡РёС‚СЊ РєСѓСЂСЃС‹', command=exchange).pack(pady=10, padx=10)
+
+# РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, С‡С‚РѕР±С‹ СѓСЃР»РѕРІРёРµ if РІСЃРµРіРґР° Р±С‹Р»Рѕ РёСЃС‚РёРЅРЅС‹Рј
+base_combobox.current(1)  # USD
+s_base_combobox.current(0)  # EUR
+target_combobox.current(2)  # JPY
+
+root.mainloop()
