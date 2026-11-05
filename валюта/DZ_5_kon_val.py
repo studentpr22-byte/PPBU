@@ -97,19 +97,4 @@ s_base_combobox.bind('<<ComboboxSelected>>', update_base_label)
 s_base_label = ttk.Label()
 s_base_label.pack()
 
-# Целевая валюта
-Label(root, text='Целевая валюта').pack(padx=10)
-target_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
-target_combobox.pack(pady=3, padx=10)
-target_combobox.bind('<<ComboboxSelected>>', update_currency_label)
-target_label = ttk.Label()
-target_label.pack()
 
-Button(text='Получить курсы', command=exchange).pack(pady=10, padx=10)
-
-# Устанавливаем значения по умолчанию, чтобы условие if всегда было истинным
-base_combobox.current(1)  # USD
-s_base_combobox.current(0)  # EUR
-target_combobox.current(2)  # JPY
-
-root.mainloop()
