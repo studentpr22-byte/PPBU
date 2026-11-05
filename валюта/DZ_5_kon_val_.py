@@ -88,3 +88,11 @@ base_combobox.pack(pady=3, padx=10)
 base_combobox.bind('<<ComboboxSelected>>', update_base_label)
 base_label = ttk.Label()
 base_label.pack()
+
+# Вторая базовая валюта
+Label(root, text='Базовая валюта 2').pack()
+s_base_combobox = ttk.Combobox(root, values=list(currencies.keys()), state="readonly")
+s_base_combobox.pack(pady=3, padx=10)
+s_base_combobox.bind('<<ComboboxSelected>>', update_base_label)
+s_base_label = ttk.Label()
+s_base_label.pack()
