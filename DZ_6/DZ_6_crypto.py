@@ -1,4 +1,7 @@
+import threading
 from datetime import datetime
+from tkinter import *
+from tkinter import ttk
 
 import requests
 
@@ -65,3 +68,41 @@ def get_crypto_price(coin_id):
         result_label.config(text=f"Ошибка сети:\n{e}", foreground='black')
     except Exception as e:
         result_label.config(text=f"Ошибка:\n{e}", foreground='black')
+
+
+def on_crypto_select(event):
+    """Запускает получение цены в отдельном потоке при выборе монеты."""
+    coin_id = crypto_combobox.get()
+    if coin_id:
+        threading.Thread(target=lambda: get_crypto_price(coin_id), daemon=True).start()
+
+
+# Настройка интерфейса
+root = Tk()
+root.title('Конвертер криптовалют в USD (CoinGecko)')
+root.geometry('400x220')
+root.resizable(False, False)
+
+# # Стили
+style = ttk.Style(root)
+
+# Заголовок
+Label(root, text='Курс криптовалют к доллару США', font=('Arial', 14, 'bold')).pack(pady=(15, 5))
+
+# Выпадающий список выбора криптовалюты
+Label(root, text='Выберите криптовалюту:', font=('Arial', 10)).pack(pady=(5, 0))
+crypto_combobox = ttk.Combobox(root, values=list(crypto_currencies.keys()), font=('Arial', 11), state='readonly',
+                               width=30)
+crypto_combobox.pack(pady=5)
+crypto_combobox.bind('<<ComboboxSelected>>', on_crypto_select)
+
+# Метка для отображения результата
+result_label = Label(root, text='Выберите монету из списка...', font=('Arial', 11, 'bold'), justify=LEFT)
+result_label.pack(pady=20, padx=20, anchor='center')
+
+# Устанавливаем значение по умолчанию
+crypto_combobox.current(0)
+# И сразу запрашиваем данные для первой монеты
+threading.Thread(target=lambda: get_crypto_price(crypto_combobox.get()), daemon=True).start()
+
+root.mainloop()
