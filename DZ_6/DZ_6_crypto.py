@@ -17,4 +17,4 @@ crypto_currencies = {
     'chainlink': 'Chainlink (LINK)'
 }
 
-# 1111git branch -M main
+# 1111git branch -M mai
