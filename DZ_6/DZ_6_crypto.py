@@ -16,4 +16,3 @@ crypto_currencies = {
     'shiba-inu': 'Shiba Inu (SHIB)',
     'chainlink': 'Chainlink (LINK)'
 }
-а
